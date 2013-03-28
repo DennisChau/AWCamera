@@ -149,12 +149,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mCamera.setPreviewDisplay(mHolder);
             mCamera.startPreview();
             
-         // Setup the objects for the face detection
+            // Setup the objects for the face detection
             mWorkBitmap = Bitmap.createBitmap(optimalSize.width, optimalSize.height, Bitmap.Config.RGB_565);
             mFaceDetector = new FaceDetector(optimalSize.width, optimalSize.height, 16);
 
-            int bufSize = optimalSize.width * optimalSize.height *
-                ImageFormat.getBitsPerPixel(parameters.getPreviewFormat()) / 8;
+            int bufSize = optimalSize.width * optimalSize.height * ImageFormat.getBitsPerPixel(parameters.getPreviewFormat()) / 8;
             byte[] cbBuffer = new byte[bufSize];
             mCamera.setPreviewCallbackWithBuffer(this);
             mCamera.addCallbackBuffer(cbBuffer);
@@ -170,10 +169,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	//from MonkeyCam
 		
 		// face detection: first convert the image from NV21 to RGB_565
-        YuvImage yuv = new YuvImage(data, ImageFormat.NV21,
-                mWorkBitmap.getWidth(), mWorkBitmap.getHeight(), null);
-        Rect rect = new Rect(0, 0, mWorkBitmap.getWidth(),
-                mWorkBitmap.getHeight());	// TODO: make rect a member and use it for width and height values above
+        YuvImage yuv = new YuvImage(data, ImageFormat.NV21, mWorkBitmap.getWidth(), mWorkBitmap.getHeight(), null);
+        Rect rect = new Rect(0, 0, mWorkBitmap.getWidth(), mWorkBitmap.getHeight());
+        // TODO: make rect a member and use it for width and height values above
 
         // TODO: use a threaded option or a circular buffer for converting streams?  see http://ostermiller.org/convert_java_outputstream_inputstream.html
         ByteArrayOutputStream baout = new ByteArrayOutputStream();
