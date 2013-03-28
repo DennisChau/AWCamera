@@ -20,6 +20,7 @@ import android.hardware.Camera.Size;
 import android.media.FaceDetector;
 import android.util.Log;
 import android.view.*;
+import android.widget.Toast;
 
 /** A basic Camera preview class */
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback, Camera.PreviewCallback {
@@ -211,7 +212,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 face.getMidPoint(eyesMP);
                 eyesDistance[i] = face.eyesDistance();
                 eyesMidPts[i] = eyesMP;
-
+                Toast.makeText(getContext(), "Face " + i + " detected", 50).show();
                 Log.i("Face",
                         i +  " " + face.confidence() + " " + face.eyesDistance() + " "
                         + "Pose: ("+ face.pose(FaceDetector.Face.EULER_X) + ","

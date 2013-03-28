@@ -99,6 +99,7 @@ public class CameraActivity extends Activity {
 	        mPreview = new CameraPreview(this, mCamera);
 	        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 	        preview.addView(mPreview);
+	        //setContentView(mPreview);
 		}
 		
 		editButton = (Button) findViewById(R.id.button_edit);		
