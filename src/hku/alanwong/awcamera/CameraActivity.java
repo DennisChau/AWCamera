@@ -85,6 +85,7 @@ public class CameraActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.activity_camera);
 		
 		if (this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
