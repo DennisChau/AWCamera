@@ -45,6 +45,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private int picWidth, picHeight;
     private float ratio, xRatio, yRatio;
     //-----MonkeyCam 
+    
+    private CanvasThread _thread;
 
     public CameraPreview(Context context, Camera camera) {
         super(context);
@@ -78,10 +80,19 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             String TAG = null;
 			Log.d(TAG, "Error setting camera preview: " + e.getMessage());
         }
+        setWillNotDraw(false); //Allows us to use invalidate() to call onDraw()
+
+        _thread = new CanvasThread(holder, this); //Start the thread that
+        _thread.setRunning(true);                     //will make calls to 
+        _thread.start();                              //onDraw()
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
         // empty. Take care of releasing the Camera preview in your activity.
+    	try {
+    		_thread.setRunning(false);                //Tells thread to stop
+    		_thread.join();                           //Removes thread from mem.
+    	} catch (InterruptedException e) {}
     }
 
     private Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
@@ -180,8 +191,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
         BitmapFactory.Options bfo = new BitmapFactory.Options();
         bfo.inPreferredConfig = Bitmap.Config.RGB_565;
-        mWorkBitmap = BitmapFactory.decodeStream(
-            new ByteArrayInputStream(baout.toByteArray()), null, bfo);
+        mWorkBitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(baout.toByteArray()), null, bfo);
 
         // Dev only, save the bitmap to a file for visual inspection
         // Also remove the WRITE_EXTERNAL_STORAGE permission from the manifest
@@ -225,11 +235,17 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             }
         }
         
-        invalidate(); // use a dirty Rect?
+        //invalidate(); // use a dirty Rect?
 
         // Requeue the buffer so we get called again
         mCamera.addCallbackBuffer(data);
     //-----MonkeyCam
+	}
+	
+	@Override
+	public void invalidate() {
+	    super.invalidate();
+	    Log.d("", "invalidate executed");
 	}
 	
 	@Override
@@ -250,7 +266,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	                                             (eyesMidPts[i].x + picWidth * ratio / 2.0f) * xRatio,
 	                                             (eyesMidPts[i].y + picHeight * ratio / 2.0f) * yRatio);
 	
-	                canvas.drawBitmap(mMonkeyImage, null , scaledRect, tmpPaint);
+	                canvas.drawBitmap(mMonkeyImage, null, scaledRect, tmpPaint);
 	            }
 	        }
     	}
